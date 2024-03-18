@@ -44,7 +44,7 @@ class PionexWebsocketClient(threading.Thread):
                 self.logger.debug(f"received message: {frame.data.decode('utf-8')}")
             except WebSocketException as e:
                 if isinstance(e, WebSocketConnectionClosedException):
-                    self.logger.error("Lost websocket connection")
+                    self.logger.error("Unexpected websocket close connection")
                 elif isinstance(e, WebSocketTimeoutException):
                     self.logger.error("Websocket connection timeout")
                 else:
@@ -62,7 +62,7 @@ class PionexWebsocketClient(threading.Thread):
                     if 'note' in data:
                         if data['note'] == 'closed by yourself':
                             break
-                    self.logger.warning("CLOSE frame received, closing websocket connection")
+                    self.logger.warning("forced op:CLOSE by server")
                     break
             else:
                 self.on_message(data)
