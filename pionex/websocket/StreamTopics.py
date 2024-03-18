@@ -1,0 +1,1 @@
+two python enums? for Stream Topic Types
