@@ -1,5 +1,5 @@
 from pionex_api.pionex.websocket.PionexWebsocketClient import PionexWebsocketClient
-from pionex_api.pionex.signature.pionex_signature import generate_WEBSOCKET_signature
+from pionex_api.pionex.signature.generate_signature import generate_WEBSOCKET_signature
 
 import time
 
@@ -11,7 +11,7 @@ class PrivateStream:
     def __init__(self, api_key, api_secret):
         timestamp = str(int(time.time() * 1000))
         signature = generate_WEBSOCKET_signature(api_key, api_secret, timestamp)
-        url = f"wss://ws.pionex.com/ws?key={api_key}&timestamp{timestamp}&signature{signature}"
+        url = f"wss://ws.pionex.com/ws?key={api_key}&timestamp={timestamp}&signature={signature}"
         self.ws_client = PionexWebsocketClient(url, self._on_message)
         self.ws_client.start()
 

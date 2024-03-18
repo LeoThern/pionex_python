@@ -16,16 +16,18 @@ class PionexWebsocketClient(threading.Thread):
     - callback on_message()
     - send individual message
     """
-    def __init__(self, url, on_message,):
+    def __init__(self, url, on_message, logger=None):
         threading.Thread.__init__(self)
-        self.timeout = ??
-        self.logger = logging.getLogger(__name__)
+        self.logger = logger
+        if self.logger == None:
+            self.logger = logging.getLogger(__name__)
         self.on_message = on_message
+        self._is_closing_connection = False
         self.create_ws_connection(url)
 
     def create_ws_connection(self, url):
         self.logger.debug(f"Creating connection with WebSocket Server: {url}")
-        self.ws = create_connection(url, timeout=self.timeout,)
+        self.ws = create_connection(url, timeout=5)
         self.logger.debug(f"WebSocket connection has been established: {url}",)
 
     def run(self):
@@ -35,13 +37,15 @@ class PionexWebsocketClient(threading.Thread):
         self.logger.debug(f"Sending message to Pionex Server: {message}")
         self.ws.send(message)
 
-    def read_data(self):
+    def _read_data(self):
         data = ""
         while True:
             try:
                 op_code, frame = self.ws.recv_data_frame(True)
             except WebSocketException as e:
                 if isinstance(e, WebSocketConnectionClosedException):
+                    if self._is_closing_connection:
+                        break
                     self.logger.error("Lost websocket connection")
                 elif isinstance(e, WebSocketTimeoutException):
                     self.logger.error("Websocket connection timeout")
@@ -75,11 +79,7 @@ class PionexWebsocketClient(threading.Thread):
         if not self.ws.connected:
             self.logger.warning("Websocket already closed")
         else:
+            self._is_closing_connection = True
             self.ws.send_close()
+            self.logger.debug("Closing connection")
         return
-
-def main():
-    pass
-
-if __name__ == "__main__":
-    main()
