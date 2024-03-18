@@ -1,7 +1,8 @@
 import threading
 import logging
+import json
+import time
 from websocket import (
-    ABNF,
     create_connection,
     WebSocketException,
     WebSocketConnectionClosedException,
@@ -10,9 +11,9 @@ from websocket import (
 
 class PionexWebsocketClient(threading.Thread):
     """
-    implements thread to run
-    while True: ws.recv_data_frame()
-    - handles heardbeat ping/pong
+    implements thread to run websocket send and recv
+    - handles opening and closing
+    - handles heartbeat ping/pong
     - callback on_message()
     - send individual message
     """
@@ -22,30 +23,27 @@ class PionexWebsocketClient(threading.Thread):
         if self.logger == None:
             self.logger = logging.getLogger(__name__)
         self.on_message = on_message
-        self._is_closing_connection = False
         self.create_ws_connection(url)
 
     def create_ws_connection(self, url):
-        self.logger.debug(f"Creating connection with WebSocket Server: {url}")
         self.ws = create_connection(url, timeout=5)
-        self.logger.debug(f"WebSocket connection has been established: {url}",)
+        self.logger.debug(f"WebSocket connection has been established to: {url}",)
 
     def run(self):
         self._read_data()
 
-    def send_message(self, message):
-        self.logger.debug(f"Sending message to Pionex Server: {message}")
+    def send_message(self, message: dict):
+        message = json.dumps(message, separators=(', ', ': '))
+        self.logger.debug(f"Sending message to Pionex: {message}")
         self.ws.send(message)
 
     def _read_data(self):
-        data = ""
         while True:
             try:
-                op_code, frame = self.ws.recv_data_frame(True)
+                frame = self.ws.recv_frame()
+                self.logger.debug(f"received frame: {frame}")
             except WebSocketException as e:
                 if isinstance(e, WebSocketConnectionClosedException):
-                    if self._is_closing_connection:
-                        break
                     self.logger.error("Lost websocket connection")
                 elif isinstance(e, WebSocketTimeoutException):
                     self.logger.error("Websocket connection timeout")
@@ -56,30 +54,28 @@ class PionexWebsocketClient(threading.Thread):
                 self.logger.error(f"Exception in read_data: {e}")
                 raise e
 
-            self._handle_data(op_code, frame, data)
-            self._handle_heartbeat(op_code, frame)
+            data = json.loads(frame.data)
+            if 'op' in data:
+                if data['op'] == 'PING':
+                    self._pong()
+                elif data['op'] == 'CLOSE':
+                    if 'note' in data:
+                        if data['note'] == 'closed by yourself':
+                            break
+                    self.logger.warning("CLOSE frame received, closing websocket connection")
+                    break
+            else:
+                self.on_message(data)
 
-            if op_code == ABNF.OPCODE_CLOSE:
-                self.logger.warning("CLOSE frame received, closing websocket connection")
-                break
-
-    def _handle_heartbeat(self, op_code, frame):
-        if op_code == ABNF.OPCODE_PING:
-            self.ws.pong("")
-            self.logger.debug("Received Ping; PONG frame sent back")
-        elif op_code == ABNF.OPCODE_PONG:
-            self.logger.debug("Received PONG frame ?")
-
-    def _handle_data(self, op_code, frame, data):
-        if op_code == ABNF.OPCODE_TEXT:
-            data = frame.data.decode("utf-8")
-            self.on_message(data)
+    def _pong(self):
+        ms_timestamp = int(time.time() * 1000)
+        message = {'op':'PONG','timestamp':ms_timestamp}
+        self.send_message(message)
 
     def close(self):
         if not self.ws.connected:
             self.logger.warning("Websocket already closed")
         else:
-            self._is_closing_connection = True
             self.ws.send_close()
             self.logger.debug("Closing connection")
         return
