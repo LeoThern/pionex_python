@@ -41,7 +41,7 @@ class PionexWebsocketClient(threading.Thread):
         while True:
             try:
                 frame = self.ws.recv_frame()
-                self.logger.debug(f"received frame: {frame}")
+                self.logger.debug(f"received message: {frame.data.decode('utf-8')}")
             except WebSocketException as e:
                 if isinstance(e, WebSocketConnectionClosedException):
                     self.logger.error("Lost websocket connection")
