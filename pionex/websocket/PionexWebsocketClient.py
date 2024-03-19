@@ -2,6 +2,7 @@ import threading
 import logging
 import json
 import time
+from typing import Callable
 from websocket import (
     create_connection,
     WebSocketException,
@@ -17,15 +18,13 @@ class PionexWebsocketClient(threading.Thread):
     - callback on_message()
     - send individual message
     """
-    def __init__(self, url, on_message, logger=None):
+    def __init__(self, url, on_message:Callable):
         threading.Thread.__init__(self)
-        self.logger = logger
-        if self.logger == None:
-            self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__)
         self.on_message = on_message
         self.create_ws_connection(url)
 
-    def create_ws_connection(self, url):
+    def create_ws_connection(self, url:str):
         self.ws = create_connection(url, timeout=5)
         self.logger.debug(f"WebSocket connection has been established to: {url}",)
 
