@@ -10,6 +10,7 @@ from websocket import (
     WebSocketTimeoutException,
 )
 
+
 class PionexWebsocketClient(threading.Thread):
     """
     implements thread to run websocket send and recv
@@ -18,14 +19,14 @@ class PionexWebsocketClient(threading.Thread):
     - callback on_message()
     - send individual message
     """
-    def __init__(self, url, on_message:Callable):
+    def __init__(self, url, on_message:Callable[[dict], any]):
         threading.Thread.__init__(self)
         self.logger = logging.getLogger(__name__)
         self.on_message = on_message
         self.create_ws_connection(url)
 
     def create_ws_connection(self, url:str):
-        self.ws = create_connection(url, timeout=5)
+        self.ws = create_connection(url)
         self.logger.debug(f"WebSocket connection has been established to: {url}",)
 
     def run(self):
