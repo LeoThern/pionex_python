@@ -23,13 +23,15 @@ class PublicStream:
             if 'data' in message:
                 self.topic_symbol_callbacks[(topic, symbol)](message['data'])
 
-    def subscribe(self, callback:Callable[[dict], any], topic:str, symbol:str = None, ):
+    def subscribe(self, callback:Callable[[dict], any], topic:str, symbol:str = None, limit:int = None):
         message = {
             'op': "SUBSCRIBE",
             'topic': topic
         }
         if symbol != None:
             message['symbol'] = symbol
+        if limit != None:
+            message['limit'] = limit
         self.ws_client.send_message(message)
         self.topic_symbol_callbacks[(topic, symbol)] = callback
 
