@@ -4,6 +4,7 @@ import json
 import time
 from typing import Callable
 from websocket import (
+    ABNF,
     create_connection,
     WebSocketException,
     WebSocketConnectionClosedException,
@@ -40,7 +41,7 @@ class PionexWebsocketClient(threading.Thread):
     def _read_data(self):
         while True:
             try:
-                frame = self.ws.recv_frame()
+                op_code, frame = self.ws.recv_data_frame(True)
                 self.logger.debug(f"received message: {frame.data.decode('utf-8')}")
             except WebSocketException as e:
                 if isinstance(e, WebSocketConnectionClosedException):
@@ -54,18 +55,23 @@ class PionexWebsocketClient(threading.Thread):
                 self.logger.error(f"Exception in read_data: {e}")
                 raise e
 
-            data = json.loads(frame.data)
-            if 'op' in data:
-                if data['op'] == 'PING':
-                    self._pong()
-                elif data['op'] == 'CLOSE':
-                    if 'note' in data:
-                        if data['note'] == 'closed by yourself':
-                            break
-                    self.logger.warning("forced op:CLOSE by server")
-                    break
-            else:
-                self.on_message(data)
+            if op_code == ABNF.OPCODE_PING:
+                self.ws.pong("")
+
+            if op_code == ABNF.OPCODE_BINARY:
+                data = json.loads(frame.data)
+                if 'op' in data:
+                    if data['op'] == 'PING':
+                        pass
+                        self._pong()
+                    elif data['op'] == 'CLOSE':
+                        if 'note' in data:
+                            if data['note'] == 'closed by yourself':
+                                break
+                        self.logger.warning("forced op:CLOSE by server")
+                        break
+                else:
+                    self.on_message(data)
 
     def _pong(self):
         ms_timestamp = int(time.time() * 1000)

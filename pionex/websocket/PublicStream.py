@@ -18,7 +18,10 @@ class PublicStream:
         return PionexWebsocketClient("wss://ws.pionex.com/wsPub", self._on_message)
 
     def _on_message(self, message:dict):
-        topic, symbol = message['topic'], message['symbol']
+        topic = message['topic']
+        symbol = None
+        if 'symbol' in message:
+            symbol = message['symbol']
         if (topic, symbol) in self.topic_symbol_callbacks:
             if 'data' in message:
                 self.topic_symbol_callbacks[(topic, symbol)](message['data'])
