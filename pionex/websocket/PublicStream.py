@@ -6,7 +6,7 @@ from typing import Callable
 
 class PublicStream:
     """
-    Wrapper to subscribe to multiple pionex private websocket streams
+    Wrapper to subscribe to multiple pionex public websocket streams
     and assign individual callbacks for each (topic, symbol) pair
     """
     def __init__(self):
@@ -18,7 +18,12 @@ class PublicStream:
         return PionexWebsocketClient("wss://ws.pionex.com/wsPub", self._on_message)
 
     def _on_message(self, message:dict):
-        topic = message['topic']
+        if 'code' in message:
+            pass
+            #handle / throw exceptions
+        topic = None
+        if 'topic' in message:
+            topic = message['topic']
         symbol = None
         if 'symbol' in message:
             symbol = message['symbol']

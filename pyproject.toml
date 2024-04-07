@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "pionex"
+version = "0.1.0"
+description = "Connector library for Pionex REST and WS api."
+authors = ["Leo Thern <47295238+LeoThern@users.noreply.github.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.31.0"
+websocket-client = "^1.7.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
