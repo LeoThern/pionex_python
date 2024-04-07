@@ -1,12 +1,11 @@
-import time
 from pionex.websocket.PionexWebsocketClient import PionexWebsocketClient
-from pionex.signature.generate_signature import generate_WEBSOCKET_signature
-from typing import Callable
 
+from typing import Callable
+import time
 
 class PublicStream:
     """
-    Wrapper to subscribe to multiple pionex public websocket streams
+    Calls to subscribe to multiple pionex public websocket streams
     and assign individual callbacks for each (topic, symbol) pair
     """
     def __init__(self):
