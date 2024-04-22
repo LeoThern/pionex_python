@@ -1,5 +1,5 @@
-# pionex_api
-unofficial python wrapper for the pionex api
-## Features
-- implements the websocket public and private streams as specified at https://pionex-doc.gitbook.io/apidocs/websocket/general-info.
-- handles heartbeat ping/pong
+# Description
+Connector library for Pionex REST and WS api.  
+Closely resembles https://pionex-doc.gitbook.io/apidocs for intuitive implementation.
+# Examples
+...
