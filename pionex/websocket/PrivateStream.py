@@ -1,4 +1,4 @@
-from pionex.utils.generate_signature import ws_signature
+from pionex.internal.generate_signature import ws_signature
 from pionex.websocket.PionexWebsocketClient import PionexWebsocketClient
 from pionex.websocket.PublicStream import PublicStream
 

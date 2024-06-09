@@ -7,14 +7,13 @@ from urllib.parse import urlencode
 
 # https://pionex-doc.gitbook.io/apidocs/restful/general/authentication
 def rest_signature(api_secret, method, path, timestamp, params=None, data=None):
-    if params is None:
-        params = {}
-    params['timestamp'] = timestamp
-    query_string = urlencode(sorted(params.items()))
+    params = params if params else {'timestamp':timestamp}
 
+    query_string = urlencode(sorted(params.items()))
+    
     message = f"{method.upper()}{path}?{query_string}"
 
-    if method.upper() == 'POST' and data is not None:
+    if data:
         message += json.dumps(data, separators=(', ', ': '))
 
     signature = hmac.new(api_secret.encode('utf-8'), message.encode('utf-8'), hashlib.sha256).hexdigest()

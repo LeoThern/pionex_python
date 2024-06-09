@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pionex"
-version = "0.1.0"
+version = "0.5.0"
 description = "Connector library for Pionex REST and WS api."
 authors = ["Leo Thern <47295238+LeoThern@users.noreply.github.com>"]
 license = "MIT"
