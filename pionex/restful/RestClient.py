@@ -20,6 +20,7 @@ class RestClient:
 
     def _send_request(http_method, url_path, **params):
         #TODO
+        #remove None params, possibly handle list[] params?
         url = self.base_url + url_path
 
         params = {'url': url}
