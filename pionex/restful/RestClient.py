@@ -4,7 +4,7 @@ import requests
 import time
 
 class RestClient:
-    def __init__(key:str=None, secret:str=None):
+    def __init__(self, key:str=None, secret:str=None):
         self.base_url = 'https://api.pionex.com/'
         self.key = key
         self.secret = secret
@@ -18,7 +18,7 @@ class RestClient:
                 'PIONEX-KEY':key
             })
 
-    def _send_request(http_method, url_path, **params):
+    def _send_request(self, http_method, url_path, **params):
         #TODO
         #remove None params, possibly handle list[] params?
         url = self.base_url + url_path
