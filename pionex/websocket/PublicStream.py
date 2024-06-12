@@ -1,12 +1,13 @@
 from pionex.websocket.PionexWebsocketClient import PionexWebsocketClient
+from pionex.internal.PionexExceptions import WebsocketError
 
 from typing import Callable
 import time
 
 class PublicStream:
     """
-    Calls to subscribe to multiple pionex public websocket streams
-    and assign individual callbacks for each (topic, symbol) pair
+    subscribe to multiple pionex public websocket streams
+    and assign individual callbacks for each unique (topic, symbol) pair
     """
     def __init__(self):
         self.ws_client = self.initialize_client()
@@ -18,8 +19,7 @@ class PublicStream:
 
     def _on_message(self, message:dict):
         if 'code' in message:
-            pass
-            #handle / throw exceptions
+            raise WebsocketError(message['message'])
         topic = None
         if 'topic' in message:
             topic = message['topic']
