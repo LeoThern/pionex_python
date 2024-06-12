@@ -1,4 +1,4 @@
-from pionex.websocket.PionexWebsocketClient import PionexWebsocketClient
+from pionex.internal.WebsocketClient import WebsocketClient
 from pionex.internal.PionexExceptions import WebsocketError
 
 from typing import Callable
@@ -15,7 +15,7 @@ class PublicStream:
         self.topic_symbol_callbacks = {}
 
     def initialize_client(self):
-        return PionexWebsocketClient("wss://ws.pionex.com/wsPub", self._on_message)
+        return WebsocketClient("wss://ws.pionex.com/wsPub", self._on_message)
 
     def _on_message(self, message:dict):
         if 'code' in message:

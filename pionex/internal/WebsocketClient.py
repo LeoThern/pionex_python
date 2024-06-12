@@ -11,8 +11,7 @@ from websocket import (
     WebSocketTimeoutException,
 )
 
-
-class PionexWebsocketClient(threading.Thread):
+class WebsocketClient(threading.Thread):
     """
     implements thread to run websocket send and recv
     - handles opening and closing

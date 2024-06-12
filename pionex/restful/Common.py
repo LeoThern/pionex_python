@@ -1,4 +1,4 @@
-from pionex.restful.RestClient import RestClient
+from pionex.internal.RestClient import RestClient
 
 class Common(RestClient):
     def __init__(self):

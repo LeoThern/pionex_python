@@ -1,4 +1,4 @@
-from pionex.restful.RestClient import RestClient
+from pionex.interal.RestClient import RestClient
 
 class Account(RestClient):
     def __init__(self, key, secret):
