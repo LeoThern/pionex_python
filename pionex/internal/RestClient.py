@@ -1,4 +1,5 @@
 from pionex.internal.generate_signature import rest_signature
+from pionex import __version__
 
 import requests
 import time
@@ -14,34 +15,36 @@ class RestClient:
             'Content-Type': 'application/json;charset=utf-8',
         })
         if key:
-            self.session.headers.add({ ?
+            self.session.headers.add({
                 'PIONEX-KEY':key
             })
 
     def _send_request(self, http_method, url_path, **params):
-        #TODO
-        #remove None params, possibly handle list[] params?
         url = self.base_url + url_path
-
-        params = {'url': url}
+        params = {k: v for k, v in params.items() if v is not None}  # Remove None params
 
         timestamp = str(int(time.time() * 1000))
-
         params['timestamp'] = timestamp
 
-        signature = rest_signature(self.secret, http_method, url_path, timestamp, params, data)
+        if 'data' in params:
+            data = params['data']
+            del params['data']
+        else:
+            data = None
 
-        self.session.headers.addonlyonce / modify({
-                'PIONEX-SIGNATURE':signature
+        if self.key:
+            signature = rest_signature(self.secret, http_method, url_path, timestamp, params, data)
+            self.session.headers.update({
+                'PIONEX-KEY': self.key,
+                'PIONEX-SIGNATURE': signature
             })
 
-        #TODO optional timeout
-            'timeout': self.timeout,
-            
         methods = {
             'GET': self.session.get,
             'DELETE': self.session.delete,
             'PUT': self.session.put,
             'POST': self.session.post,
         }
-        return methods[http_method](**params)
+
+        response = methods[http_method](url, params=params, json=data)
+        return response.text
