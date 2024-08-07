@@ -15,7 +15,7 @@ class RestClient:
             'Content-Type': 'application/json;charset=utf-8',
         })
         if key:
-            self.session.headers.add({
+            self.session.headers.update({
                 'PIONEX-KEY':key
             })
 
