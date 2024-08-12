@@ -1,8 +1,10 @@
 from pionex.internal.generate_signature import rest_signature
+from pionex.internal.PionexExceptions import REST_Exception
 from pionex import __version__
 
 import requests
 import time
+import json
 
 class RestClient:
     def __init__(self, key:str=None, secret:str=None):
@@ -39,12 +41,19 @@ class RestClient:
                 'PIONEX-SIGNATURE': signature
             })
 
-        methods = {
-            'GET': self.session.get,
-            'DELETE': self.session.delete,
-            'PUT': self.session.put,
-            'POST': self.session.post,
-        }
+        #convert to switch in future
+        assert http_method in ['GET','DELETE','PUT','POST']
+        if http_method == 'GET':
+            r = self.session.get(url, params=params, json=data)
+        if http_method == 'DELETE':
+            r = self.session.delete(url, params=params, json=data)
+        if http_method == 'PUT':
+            r = self.session.put(url, params=params, json=data)
+        if http_method == 'POST':
+            r = self.session.post(url, params=params, json=data)
 
-        response = methods[http_method](url, params=params, json=data)
-        return response.text
+        response = r.json()
+
+        if not response['result']:
+            raise REST_Exception(response)
+        return response

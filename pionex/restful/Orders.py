@@ -1,23 +1,23 @@
 from pionex.internal.RestClient import RestClient
 
-class Common(RestClient):
+class Orders(RestClient):
     def __init__(self, key, secret):
         super().__init__(key, secret)
 
     def new_order(self, symbol: str, side: str, type: str, clientOrderId: str = None, size: str = None, price: str = None, amount: str = None, IOC: bool = None):
-        return self._send_request('POST', '/api/v1/trade/order', 
-                                symbol=symbol, side=side, type=type, 
-                                clientOrderId=clientOrderId, size=size, 
+        return self._send_request('POST', '/api/v1/trade/order',
+                                symbol=symbol, side=side, type=type,
+                                clientOrderId=clientOrderId, size=size,
                                 price=price, amount=amount, IOC=IOC)
 
     def new_multiple_order(self, symbol: str, side: str, type: str, size: str, price: str, clientOrderId: str = None, orders: list = None):
-        return self._send_request('POST', '/api/v1/trade/massOrder', 
-                                symbol=symbol, 
-                                side=side, 
-                                type=type, 
-                                size=size, 
-                                price=price, 
-                                clientOrderId=clientOrderId, 
+        return self._send_request('POST', '/api/v1/trade/massOrder',
+                                symbol=symbol,
+                                side=side,
+                                type=type,
+                                size=size,
+                                price=price,
+                                clientOrderId=clientOrderId,
                                 orders=orders)
 
     def get_order(self, orderId: int):
