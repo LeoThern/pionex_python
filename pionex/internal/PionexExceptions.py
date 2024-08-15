@@ -17,6 +17,6 @@ class REST_Exception(PionexException):
         return f"{self.code} \n[!] {self.message}"
 
 
-def check_type(type_str):
+def assert_valid_type(type_str):
     if type_str:
         assert type in ['SPOT','PERP'], "unknown type"
