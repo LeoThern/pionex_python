@@ -1,5 +1,5 @@
-from pionex.internal.WebsocketClient import WebsocketClient
-from pionex.internal.PionexExceptions import WebsocketError
+from pionex_python.internal.WebsocketClient import WebsocketClient
+from pionex_python.internal.PionexExceptions import WebsocketError
 
 from typing import Callable
 import time

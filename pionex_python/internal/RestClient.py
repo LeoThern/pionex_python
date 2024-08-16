@@ -1,6 +1,6 @@
-from pionex.internal.generate_signature import rest_signature
-from pionex.internal.PionexExceptions import REST_Exception
-from pionex import __version__
+from pionex_python.internal.generate_signature import rest_signature
+from pionex_python.internal.PionexExceptions import REST_Exception
+from pionex_python import __version__
 
 import requests
 import time

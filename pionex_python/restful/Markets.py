@@ -1,5 +1,5 @@
-from pionex.internal.RestClient import RestClient
-from pionex.internal.PionexExceptions import assert_valid_market_type
+from pionex_python.internal.RestClient import RestClient
+from pionex_python.internal.PionexExceptions import assert_valid_market_type
 
 class Markets(RestClient):
     def __init__(self):

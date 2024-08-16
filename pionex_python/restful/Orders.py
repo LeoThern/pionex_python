@@ -1,4 +1,4 @@
-from pionex.internal.RestClient import RestClient
+from pionex_python.internal.RestClient import RestClient
 
 class Orders(RestClient):
     def __init__(self, key, secret):
