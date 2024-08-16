@@ -1,11 +1,14 @@
 # Pionex to Python
-> pip install pionex_python
-# Description
-Connector library for Pionex Restful and Websocket api.  
-Closely resembles https://pionex-doc.gitbook.io/apidocs for intuitive implementation.  
+## Description
+Connector library for Pionex Restful and Websocket api.
+Closely resembles [PionexAPI Docs](https://pionex-doc.gitbook.io/apidocs) for intuitive implementation.
 All function names are identical to the names in documentation.
-# Examples
-## Restful  
+## Examples
+```sh
+pip install pionex_python
+```
+### Restful
+#### public
 ```py
 from pionex_python.restful.Common import Common
 
@@ -14,22 +17,25 @@ market_data = commonClient.market_data()
 
 print(market_data)
 ```
-
+#### private
 ```py
 from pionex_python.restful.Orders import Orders
 
-key, secret = "XXXXX", "XXXXX"
+key, secret = "X...X", "X...X"
 
 ordersClient = Orders(key, secret)
-response = ordersClient.new_order(
-    symbol="BTC_USDT",
-    side="BUY",
-    type="MARKET",
-    amount="16",
-)
+
+order = {
+    "symbol"":"BTC_USDT",
+    "side":"BUY",
+    "type":"MARKET",
+    "amount":"16"
+}
+
+response = ordersClient.new_order(order=order)
 print(response)
 ```
-## Websocket:
+### Websocket
 ```py
 from pionex_python.websocket.PublicStream import PublicStream
 from time import sleep
@@ -43,7 +49,9 @@ stream.subscribe(callback=onMessage, topic="TRADE",symbol="BTC_USDT")
 sleep(5)
 stream.unsubscribe(topic="TRADE",symbol="BTC_USDT")
 ```
-# Motivation
+## TODO:
+- [ ] implement testing
+## Motivation
 - learn about the python packaging and publishing systems
-- implement a websocket api client from 'scratch'
-- increase experience with python and crypto marketplaces (other than binance)
+- implement a python websocket client
+- increase experience with marketplace apis
