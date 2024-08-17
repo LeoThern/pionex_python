@@ -53,3 +53,4 @@ class PublicStream:
 
     def __del__(self):
         self.ws_client.close()
+        del self.ws_client
