@@ -1,14 +1,13 @@
 # Pionex to Python
-## Description
-Connector library for Pionex Restful and Websocket api.
-Closely resembles [PionexAPI Docs](https://pionex-doc.gitbook.io/apidocs) for intuitive implementation.
-All function names are identical to the names in documentation.
-## Examples
 ```sh
 pip install pionex_python
 ```
-### Restful
-#### public
+## Description
+Connector library for Pionex Restful and Websocket api.
+Closely resembles [PionexAPI Docs](https://pionex-doc.gitbook.io/apidocs) for intuitive implementation.
+All function names are identical to the endpoints in the documentation.
+## Examples
+#### rest public
 ```py
 from pionex_python.restful.Common import Common
 
@@ -17,7 +16,7 @@ market_data = commonClient.market_data()
 
 print(market_data)
 ```
-#### private
+#### rest private
 ```py
 from pionex_python.restful.Orders import Orders
 
@@ -77,10 +76,12 @@ def onMessage(msg):
     print(msg)
 
 stream.subscribe(callback=onMessage, topic='TRADE',symbol='BTC_USDT')
+stream.subscribe(callback=onMessage, topic='TRADE',symbol='ETH_USDT')
 sleep(5)
 stream.unsubscribe(topic='TRADE',symbol='BTC_USDT')
+stream.unsubscribe(topic='TRADE',symbol='ETH_USDT')
 ```
 ## Motivation
-- learn about the python packaging and publishing systems
+- learn the python packaging and publishing systems
 - implement a python websocket client
 - increase experience with marketplace apis
