@@ -81,7 +81,14 @@ sleep(5)
 stream.unsubscribe(topic='TRADE',symbol='BTC_USDT')
 stream.unsubscribe(topic='TRADE',symbol='ETH_USDT')
 ```
+
+#### Demultiplexing Topic and Symbol
+The websocket client demultiplexes multiple streams over a single connection. Each subscription to a unique (topic, symbol) pair can have its own callback function.
+
+## Contributing
+Contributions are welcome! Anyone can fork the repository, make changes, and submit a pull request for review and merging.
+
+---
+
 ## Motivation
-- learn the python packaging and publishing systems
-- implement a python websocket client
-- increase experience with marketplace apis
+I initially developed this project to learn Python packaging, implement a WebSocket client, and gain experience with marketplace APIs.
