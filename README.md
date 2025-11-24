@@ -75,8 +75,8 @@ stream = PublicStream()
 def onMessage(msg):
     print(msg)
 
-stream.subscribe(callback=onMessage, topic='TRADE',symbol='BTC_USDT')
-stream.subscribe(callback=onMessage, topic='TRADE',symbol='ETH_USDT')
+stream.subscribe(onMessage=onMessage, topic='TRADE',symbol='BTC_USDT')
+stream.subscribe(onMessage=onMessage, topic='TRADE',symbol='ETH_USDT')
 sleep(5)
 stream.unsubscribe(topic='TRADE',symbol='BTC_USDT')
 stream.unsubscribe(topic='TRADE',symbol='ETH_USDT')

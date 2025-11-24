@@ -30,7 +30,7 @@ class PublicStream:
             if 'data' in message:
                 self.topic_symbol_callbacks[(topic, symbol)](message['data'])
 
-    def subscribe(self, callback:Callable[[dict], any], topic:str, symbol:str = None, limit:int = None):
+    def subscribe(self, onMessage:Callable[[dict], any], topic:str, symbol:str = None, limit:int = None):
         message = {
             'op': "SUBSCRIBE",
             'topic': topic
@@ -40,7 +40,7 @@ class PublicStream:
         if limit != None:
             message['limit'] = limit
         self.ws_client.send_message(message)
-        self.topic_symbol_callbacks[(topic, symbol)] = callback
+        self.topic_symbol_callbacks[(topic, symbol)] = onMessage
 
     def unsubscribe(self, topic:str, symbol:str=None):
         message = {
